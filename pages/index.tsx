@@ -1,11 +1,11 @@
 import { useState } from "react";
 import type { NextPage, GetServerSideProps } from "next";
- 
+
 interface CatCategory {
   id: number;
   name: string;
 }
- 
+
 interface SearchCatImage {
   breeds: string[];
   categories: CatCategory[];
@@ -14,37 +14,48 @@ interface SearchCatImage {
   width: number;
   height: number;
 }
- 
+
 type SearchCatImageResponse = SearchCatImage[];
- 
+
 const fetchCatImage = async () => {
   const res = await fetch("https://api.thecatapi.com/v1/images/search");
   const result = (await res.json()) as SearchCatImageResponse;
   return result[0];
 };
- 
+
 interface IndexPageProps {
   initialCatImageUrl: string;
 }
- 
+
 const IndexPage: NextPage<IndexPageProps> = ({ initialCatImageUrl }) => {
   const [catImageUrl, setCatImageUrl] = useState(initialCatImageUrl);
- 
+
   const handleClick = async () => {
     const image = await fetchCatImage();
     setCatImageUrl(image.url);
   };
- 
+
   return (
     <div>
-      <button onClick={handleClick}>きょうのにゃんこ🐱</button>
+      <button
+        onClick={handleClick}
+        style={{
+          backgroundColor: "#319795",
+          border: "none",
+          borderRadius: "4px",
+          color: "white",
+          padding: "4px 8px",
+        }}
+      >
+        きょうのにゃんこ🐱
+      </button>
       <div style={{ marginTop: 8 }}>
         <img src={catImageUrl} width={500} height="auto" />
       </div>
     </div>
   );
 };
- 
+
 export const getServerSideProps: GetServerSideProps<
   IndexPageProps
 > = async () => {
@@ -55,5 +66,5 @@ export const getServerSideProps: GetServerSideProps<
     },
   };
 };
- 
+
 export default IndexPage;
